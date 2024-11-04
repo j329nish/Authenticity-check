@@ -54,6 +54,7 @@ python main.py --option value
 
 GitHubとは、ソースコードの管理や共同作業を行うためのウェブプラットフォームです。成果物の管理を共有でき、チーム開発がしやすいため、多くのITエンジニアに重宝されています。
 GitHubは以下のような形で構成されてます。
+
 <img src="image/GitHubComponents.png" width="70%">
 
 ## ライセンス
