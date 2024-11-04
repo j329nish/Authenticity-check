@@ -100,6 +100,10 @@ class CSVEditorApp:
             honbun_label = tk.Label(self.scrollable_frame, text=row['honbun'] + "\n\n", wraplength=900, anchor="w", justify="left")
             honbun_label.grid(row=i, column=2, sticky='w')
 
+            honbun_length = len(row['honbun']) 
+            length_label = tk.Label(self.scrollable_frame, text=f"文字数: {honbun_length}", anchor="w", justify="left")
+            length_label.grid(row=i, column=4, sticky='w')
+
             if var.get():
                 for widget in [midasi_label, honbun_label]:
                     widget.configure(bg='lightblue')
