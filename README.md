@@ -4,7 +4,7 @@
 
 ## 概要
 
-![image](image/attempt.png)
+<img src="image/attempt.png" width="80%">
 
 - このプロジェクトは何をするものか？
 - なぜこのプロジェクトが必要なのか？
