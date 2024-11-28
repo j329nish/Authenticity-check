@@ -46,7 +46,7 @@ if st.button("判定"):
 
         # 複数のハイライト処理を行
         highlighted_text = highlight_text(text, highlight_ranges)
-        st.markdown(highlighted_text, unsafe_allow_html=True)
+        st.markdown(f"<pre>{highlighted_text}</pre>", unsafe_allow_html=True)
         
         # スコアを一度だけ表示（パーセント表示）
         if pred_label!=1:
