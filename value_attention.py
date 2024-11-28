@@ -42,14 +42,12 @@ class LUKEClassifier(pl.LightningModule):
     def configure_optimizers(self):
         return torch.optim.Adam(self.model.parameters(), lr=1e-5)
 
-    def forward(self, input_ids, output_attentions=False):  # output_attentions 引数を追加
-        # output_attentions 引数をモデルに渡す
-        outputs = self.model(input_ids, output_attentions=output_attentions)
-        return outputs
+    def forward(self, **inputs):
+        return self.model(**inputs)
 
 model_name = "studio-ousia/luke-japanese-base-lite"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-checkpoint_path = "model/tekagemi_luke_ver1.0.ckpt"
+checkpoint_path = "model/tekagemi_luke_vr1.ckpt"
 model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
 model_loaded = LUKEClassifier.load_from_checkpoint(checkpoint_path, model=model)
 model_loaded.eval()
@@ -61,7 +59,7 @@ def pred(sentence):
     inputs = tokenizer(sentence, return_tensors="pt", truncation=True, padding="max_length", max_length=512 )
     inputs = {key: val.to(device) for key, val in inputs.items()}
     with torch.no_grad():
-        outputs = model_loaded(inputs['input_ids'])
+        outputs = model_loaded(**inputs)
         logits = outputs.logits
     predicted_label = torch.argmax(logits, dim=-1).item()
     probabilities = F.softmax(logits, dim=-1)
@@ -89,6 +87,8 @@ def find_str_positions(text, substring):
         start += len(substring) 
 
     return positions
+
+
 
 def process_text(text):
     pred_label, total_score = pred(text)
@@ -121,3 +121,5 @@ def process_text(text):
 
     
     return pred_label, total_score, highlight_ranges_and_score
+text ="ChatGPTやGeminiといった生成系AIが普及する中、AIが生成した文章には誤った情報が含まれる可能性があります。また、その文章がAIによって書かれたものか、人間によるものかを判別することがますます難しくなっています。誤情報は信頼性を損なう原因となるため、文章がAIによって生成されたものかどうかを識別することは非常に重要です。そこで本発表では、生成AIが書いた文章と人間が書いた文章を収集してデータセットを構築し、自然言語処理モデルを活用した真贋判定システムを提案します。"
+print(process_text(text))

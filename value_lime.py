@@ -43,14 +43,12 @@ class LUKEClassifier(pl.LightningModule):
     def configure_optimizers(self):
         return torch.optim.Adam(self.model.parameters(), lr=1e-5)
 
-    def forward(self, input_ids, output_attentions=False):  # output_attentions 引数を追加
-        # output_attentions 引数をモデルに渡す
-        outputs = self.model(input_ids, output_attentions=output_attentions)
-        return outputs
+    def forward(self, **inputs):
+        return self.model(**inputs)
 
 model_name = "studio-ousia/luke-japanese-base-lite"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-checkpoint_path = "model/tekagemi_luke_ver1.0.ckpt"
+checkpoint_path = "model/tekagemi_luke_vr1.ckpt"
 model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
 model_loaded = LUKEClassifier.load_from_checkpoint(checkpoint_path, model=model)
 model_loaded.eval()
@@ -62,7 +60,7 @@ def pred(sentence):
     inputs = tokenizer(sentence, return_tensors="pt", truncation=True, padding="max_length", max_length=512 )
     inputs = {key: val.to(device) for key, val in inputs.items()}
     with torch.no_grad():
-        outputs = model_loaded(inputs['input_ids'])
+        outputs = model_loaded(**inputs)
         logits = outputs.logits
     predicted_label = torch.argmax(logits, dim=-1).item()
     probabilities = F.softmax(logits, dim=-1)
@@ -72,17 +70,8 @@ def pred(sentence):
 
 from typing import List
 max_len = 512
-class_names = [
-    'dokujo-tsushin',
-    'it-life-hack',
-    'smax',
-    'sports-watch',
-    'kaden-channel',
-    'movie-enter',
-    'topic-news',
-    'livedoor-homme',
-    'peachy'
-    ]
+class_names = ['human', 'AI']
+
 
 def find_str_positions(text, substring):
     positions = []
@@ -123,9 +112,15 @@ explainer = LimeTextExplainer(class_names=class_names)
 def process_text(text):
     pred_label, total_score = pred(text)
     lime_list = []
-    exp = explainer.explain_instance(text, predictor, num_features=10, num_samples=70, top_labels=1)
-    for i in exp.as_list():
-        lime_list.append({'token':i[0].item(), 'lime':round(i[1], 3)})
+    
+    # LIMEを使って説明を得る
+    exp = explainer.explain_instance(text, predictor, num_features=10, num_samples=70)
+    
+    # 返されたラベルの中で最も高いスコアを持つラベルを取得
+    top_label = exp.available_labels()[0]  # 最も高いスコアを持つラベル
+    
+    for i in exp.as_list(label=top_label):
+        lime_list.append({'token': i[0], 'lime': round(i[1], 3)})#-が人間ぽくって
 
     highlight_ranges_and_score = []
     cnt = 0
@@ -137,6 +132,5 @@ def process_text(text):
         if cnt >= 9:
             break
         cnt += 1
-
     
     return pred_label, total_score, highlight_ranges_and_score
