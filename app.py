@@ -8,7 +8,7 @@ def highlight_text(text, ranges):
     
     for start_idx, end_idx,score in ranges:
         # start_idx, end_idxがテキストの範囲内であるかを確認
-        if start_idx < 0 or end_idx >= len(text) or start_idx >= end_idx:
+        if start_idx < 0 or end_idx >= len(text) + 1 or start_idx >= end_idx:
             continue  # 範囲外の場合はスキップ
 
         color = get_highlight_color(score)
