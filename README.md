@@ -1,4 +1,4 @@
-# 真贋判定アプリ（Authenticity-check）
+## 真贋判定アプリ（Authenticity-check）
 
 新聞記事を見て、人間が書いた記事かAIが書いた記事かを自動で判定するWebアプリです。
 
