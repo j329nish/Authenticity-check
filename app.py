@@ -79,14 +79,11 @@ if st.button("判定"):
         # スコアを一度だけ表示（パーセント表示）
         if pred_label!=1:
             st.write("""<h1 align="center">結果：人間</h1>""",unsafe_allow_html=True)
-            #st.write(f"人間度: {total_score:.2f}%")
-            fig = create_meter(total_score*100)
-            st.plotly_chart(fig)
         else:
             st.write("""<h1 align="center">結果：AI</h1>""",unsafe_allow_html=True)
-            #st.write(f"AI度: {total_score:.2f}%")
-            fig = create_meter(total_score*100)
-            st.plotly_chart(fig)
+        
+        st.write(f"""<h3 align="center">確信度:{100 * total_score}%</h3>""",unsafe_allow_html=True)
+        st.progress(total_score)
 
         # 複数のハイライト処理を行う
         highlighted_text = highlight_text(text, highlight_ranges)
