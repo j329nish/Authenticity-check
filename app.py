@@ -5,21 +5,21 @@ from value import process_text  # value.pyから関数をインポート
 def highlight_text(text, ranges):
     highlighted = ""
     last_idx = 0
-    
+    ranges = sorted(ranges, key=lambda x: x[0])
     for start_idx, end_idx,score in ranges:
         # start_idx, end_idxがテキストの範囲内であるかを確認
         if start_idx < 0 or end_idx >= len(text) + 1 or start_idx >= end_idx:
             continue  # 範囲外の場合はスキップ
-
+ 
         color = get_highlight_color(score)
         # ハイライト処理
         highlighted += text[last_idx:start_idx]
         highlighted += f'<span style="background-color: {color};">{text[start_idx:end_idx]}</span>'
         last_idx = end_idx
-    
+   
     # 残りのテキストを追加
     highlighted += text[last_idx:]
-    
+   
     return highlighted
 
 def get_highlight_color(score):
@@ -81,8 +81,8 @@ if st.button("判定"):
             st.write("""<h1 align="center">結果：人間</h1>""",unsafe_allow_html=True)
         else:
             st.write("""<h1 align="center">結果：AI</h1>""",unsafe_allow_html=True)
-        
-        st.write(f"""<h3 align="center">確信度:{100 * total_score}%</h3>""",unsafe_allow_html=True)
+        score = round(100 * total_score,2)
+        st.write(f"""<h3 align="center">確信度:{score:.2f}%</h3>""",unsafe_allow_html=True)
         st.progress(total_score)
 
         # 複数のハイライト処理を行う
