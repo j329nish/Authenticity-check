@@ -6,9 +6,8 @@ import shap
 import torch.nn.functional as F
 import numpy as np
 
-# LUKE分類器の定義
+#モデルの定義
 class RoBERTaClassifier(pl.LightningModule):
-
     def __init__(self, model):
         super(RoBERTaClassifier, self).__init__()
         self.model = model
@@ -48,7 +47,7 @@ class RoBERTaClassifier(pl.LightningModule):
 
 model_name = "ku-nlp/roberta-base-japanese-char-wwm"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-checkpoint_path = "model/houdou_Roberta_ver2.0.ckpt"
+checkpoint_path = "model/houdou_Roberta_ver1.0.ckpt"
 model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
 model_loaded = RoBERTaClassifier.load_from_checkpoint(checkpoint_path, model=model)
 model_loaded.eval()
@@ -56,7 +55,6 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model_loaded.to(device)
 
 def pred(sentence):
-    # 文をエンコード（トークンID、attention maskを取得）
     inputs = tokenizer(sentence, return_tensors="pt", truncation=True, padding="max_length", max_length=512 )
     inputs = {key: val.to(device) for key, val in inputs.items()}
     with torch.no_grad():
