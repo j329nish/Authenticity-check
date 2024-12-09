@@ -1,8 +1,6 @@
 import torch
 import pytorch_lightning as pl
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from lime.lime_text import LimeTextExplainer
-import shap
 import torch.nn.functional as F
 
 # LUKE分類器の定義
@@ -47,9 +45,9 @@ class LUKEClassifier(pl.LightningModule):
         outputs = self.model(input_ids, output_attentions=output_attentions)
         return outputs
 
-model_name = "studio-ousia/luke-japanese-base-lite"
+model_name = "ku-nlp/roberta-base-japanese-char-wwm"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-checkpoint_path = "model/tekagemi_luke_ver1.0.ckpt"
+checkpoint_path = "model/houdou_Roberta_ver2.0.ckpt"
 model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
 model_loaded = LUKEClassifier.load_from_checkpoint(checkpoint_path, model=model)
 model_loaded.eval()
@@ -85,39 +83,42 @@ def find_str_positions(text, substring):
         if start == -1:
             break
         end = start + len(substring)
-        positions.append((start + 1, end)) 
+        positions.append((start, end)) 
         start += len(substring) 
 
     return positions
 
 def process_text(text):
     pred_label, total_score = pred(text)
-    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding="max_length", max_length=512 )
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding="max_length", max_length=512)
     inputs = {key: val.to(device) for key, val in inputs.items()}
     outputs = model(**inputs, output_attentions=True)
-    attentions = outputs.attentions 
+    attentions = outputs.attentions
     special_tokens = tokenizer.all_special_tokens
     attention_weight = get_attention(inputs, pred_label, attentions[-1])
-    non_zero_count = torch.sum(attention_weight != 0).item()
+
+    # トークン化されたトークンを取得
     tokens = tokenizer.convert_ids_to_tokens(inputs["input_ids"][0])
     attention_list = []
-    for attention, token in zip(attention_weight, tokens):
+    for i, (attention, token) in enumerate(zip(attention_weight, tokens)):
         if token not in special_tokens:  # 特殊トークンを除外
-            attention_list.append({'token': token, 'attention': round(attention.item(), 3)})
+            attention_list.append({'token': token, 'attention': round(attention.item(), 3), 'index': i})
+
+    # アテンションスコアでソート
     attention_list = sorted(attention_list, key=lambda x: abs(x['attention']), reverse=True)
 
-
-
+    # トークン位置を元のテキストにマッピング
     highlight_ranges_and_score = []
-    cnt = 0
-    for attention in attention_list:
-        positions = find_str_positions(text, attention['token'])
-        for range in positions:
-            t = range + (attention['attention'],)
-            highlight_ranges_and_score.append(t)
-        if cnt >= 9:
-            break
-        cnt += 1
+    text_pointer = 0
+    for i, attention in enumerate(attention_list[:20]):  # 上位10個のみ処理
+        token_text = attention['token'].replace("##", "")  # サブワードを修正
+        token_index = attention['index']
+        
+        # 元のテキスト内の一致する位置を計算
+        start = text.find(token_text, text_pointer)
+        if start != -1:
+            end = start + len(token_text)
+            highlight_ranges_and_score.append((start, end, attention['attention']))
+            text_pointer = end  # 次の検索開始位置を更新
 
-    
     return pred_label, total_score, highlight_ranges_and_score
