@@ -75,6 +75,8 @@ GitHubは以下のような形で構成されてます。
 
 ## クレジット
 
-作成者：西田+他2名..
-
+作成者：<br>
+西田：https://github.com/j329nish<br>
+濱本：https://github.com/j348hama<br>
+松浦：https://github.com/j396mats<br>
 
