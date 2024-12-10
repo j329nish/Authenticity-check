@@ -8,9 +8,12 @@
 
 近年、大規模言語モデルの進化に伴って自動生成文章は流暢性を増していますが、誤情報を含む自動生成文章の拡散は社会に悪影響を及ぼすリスクがあります。私たちはこの問題に取り組むため、新聞記事の見出しから大規模言語モデルを用いて本文相当の文章を自動生成しました。その後、これらの記事と実際の新聞記事を言語モデルで学習させ、AIが生成した記事を識別するWebアプリを作成しました。
 
-## 機能一覧
+## 機能説明
 
-(作成予定)
+・ txtファイルのアップロード、テキストの記入が可能<br>
+・ 「判定」ボタンを押すと判定を開始（CPUを使用するため約5分かかります）<br>
+・ 判定が終了すると、判定結果、確信度が表示されます。<br>
+・ また、判定を行った文章が表示され、判断結果の根拠となる部分がハイライト表示されます。
 
 ## 使用技術
 
@@ -21,9 +24,9 @@
 
 ## 使用方法
 
-１．プロジェクトのインストール
-２．仮想環境の構築
-３．依存関係のインストール
+１．プロジェクトのインストール<br>
+２．仮想環境の構築<br>
+３．依存関係のインストール<br>
 
 ### １．プロジェクトのインストール
 以下の手順でプロジェクトをローカル環境にインストールしてください。
@@ -53,30 +56,44 @@ git clone https://github.com/pyenv-win/pyenv-win.git "%USERPROFILE%\.pyenv"
 ```
 
 Windowsキーを押して「環境変数」と入力し、「システム環境変数の編集」を開く。
-<img src="image/attempt.png" width="70%"><br>
+<br>
+<img src="image/2.1.png" width="40%"><br>
 
 <br>
 「環境変数」を押す。
-<img src="image/attempt.png" width="70%">
+<br>
+<img src="image/2.2.png" width="40%">
 
+<br>
+システム環境変数のPathを押して「編集」を押す。
+<br>
+<img src="image/2.3.png" width="40%">
 
-ユーザー環境変数のPathを押して「編集」を押す。
-<img src="image/attempt.png" width="70%">
-
+<br>
 新規で以下2つを追加する。
+
 ```
 %USERPROFILE%\.pyenv\pyenv-win\bin
 %USERPROFILE%\.pyenv\pyenv-win\shims
 ```
 
+<br>
 作成したディレクトリでcmdを起動し、仮想環境を構築する。
+
 ```
+pythonの古いバージョンをインストール
+pyenv install 3.10.6
+pyenv local 3.10.6
+
+仮想環境を構築
 python -m venv pytorch-env
 ```
 
+<br>
 以下のようにコマンド操作ができたら完了です。
+
 ```
- 仮想環境の起動
+仮想環境の起動
 .\pytorch-env\Scripts\activate
 
 仮想環境の終了
@@ -84,23 +101,53 @@ deactivate
 ```
 
 ### ３．依存関係のインストール
-以下の手順で依存関係をインストールしてください。
+アプリのあるディレクトリで仮想環境を起動した後、以下の手順で依存関係をインストールしてください。
 
 ```
-pyenv install 3.10.6
-pyenv local 3.10.6
-
-
+pip install torch torchvision torchaudio
+pip install pytorch-lightning
 pip install streamlit
 pip install plotly
+pip install transformers
+pip install lime
+pip install shap
+```
+
+```
+※もし以下のようなエラーが出たら
+Importing the numpy C-extensions failed. This error can happen for
+many reasons, often due to issues with your setup or how NumPy was
+installed.
+
+このようにnumpyをインストールし直してください。
+pip uninstall numpy
+pip install numpy
+```
+
+```
+※もし以下のようなエラーが出たら
+ImportError: cannot import name '_imaging' from 'PIL'
+
+このようにPillowをインストールし直してください。
+pip uninstall Pillow
+pip install Pillow
+```
+
+```
+※もし以下のようなエラーが出たら
+import pandas._libs.pandas_parser  # isort: skip # type: ignore[reportUnusedImport]
+ModuleNotFoundError: No module named 'pandas._libs.pandas_parser'
+
+このようにpandasをインストールし直してください。
+pip uninstall pandas
+pip install pandas
 ```
 
 ## 使い方
 
-実行方法の例
-
+アプリのあるディレクトリで仮想環境を起動した後、以下のように実行してください。
 ```
-python main.py --option value
+streamlit run app.py
 ```
 
 ## （作成者向け）GitHubの使い方
