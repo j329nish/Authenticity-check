@@ -17,7 +17,7 @@
 |Category|Tecknology Stack|
 |:-|:-|
 |Frontend|Python, Streamlit, Flask|
-|Backend|Python, RoBRTa, SHAP, LIME|
+|Backend|Python, RoBRTa, LIME|
 
 ## インストール方法
 
