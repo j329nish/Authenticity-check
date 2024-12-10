@@ -17,10 +17,10 @@
 
 ## Webアプリのデモ
 
-Webアプリを立ち上げた時の画面
+Webアプリを立ち上げた時の画面<br>
 <img src="image/before-streamlit.png" width="70%">
 
-真贋判定を行った結果の画面
+真贋判定を行った結果の画面<br>
 <img src="image/after-streamlit.png" width="70%">
 
 ## 使用技術
