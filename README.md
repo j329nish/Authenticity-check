@@ -15,6 +15,14 @@
 ・ 判定が終了すると、判定結果、確信度が表示されます。<br>
 ・ また、判定を行った文章が表示され、判断結果の根拠となる部分がハイライト表示されます。
 
+## Webアプリのデモ
+
+Webアプリを立ち上げた時の画面
+<img src="image/before-streamlit.png" width="70%">
+
+真贋判定を行った結果の画面
+<img src="image/after-streamlit.png" width="70%">
+
 ## 使用技術
 
 |Category|Tecknology Stack|
@@ -145,8 +153,9 @@ pip install pandas
 
 ## 使い方
 
-アプリのあるディレクトリで仮想環境を起動した後、以下のように実行してください。
+アプリのあるディレクトリに移動した後、以下のように実行してください。
 ```
+.\pytorch-env\Scripts\activate
 streamlit run app.py
 ```
 
