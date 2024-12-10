@@ -19,8 +19,13 @@
 |Frontend|Python, Streamlit, Flask|
 |Backend|Python, RoBRTa, LIME|
 
-## インストール方法
+## 使用方法
 
+１．プロジェクトのインストール
+２．仮想環境の構築
+３．依存関係のインストール
+
+### １．プロジェクトのインストール
 以下の手順でプロジェクトをローカル環境にインストールしてください。
 
 ```
@@ -30,12 +35,64 @@ cd repository
 
 リポジトリをクローン
 git clone https://github.com/j329nish/Authenticity-check.git
+```
 
-ディレクトリに移動
-cd repository
+### ２．仮想環境の構築
+以下の手順で仮想環境を作成してください。（※Python、Gitがインストールされていること前提です。）
+```
+Pythonはこれを参考にインストールしてください。
+https://www.python.jp/install/windows/install.html
 
-依存関係をインストール
-pip install -r requirements.txt
+Gitは以下からインストールしてください。
+https://qiita.com/T-H9703EnAc/items/4fbe6593d42f9a844b1c
+```
+
+```
+cmdを起動し、GitHubからpyenvをインストール
+git clone https://github.com/pyenv-win/pyenv-win.git "%USERPROFILE%\.pyenv"
+```
+
+Windowsキーを押して「環境変数」と入力し、「システム環境変数の編集」を開く。
+<img src="image/attempt.png" width="70%"><br>
+
+<br>
+「環境変数」を押す。
+<img src="image/attempt.png" width="70%">
+
+
+ユーザー環境変数のPathを押して「編集」を押す。
+<img src="image/attempt.png" width="70%">
+
+新規で以下2つを追加する。
+```
+%USERPROFILE%\.pyenv\pyenv-win\bin
+%USERPROFILE%\.pyenv\pyenv-win\shims
+```
+
+作成したディレクトリでcmdを起動し、仮想環境を構築する。
+```
+python -m venv pytorch-env
+```
+
+以下のようにコマンド操作ができたら完了です。
+```
+ 仮想環境の起動
+.\pytorch-env\Scripts\activate
+
+仮想環境の終了
+deactivate
+```
+
+### ３．依存関係のインストール
+以下の手順で依存関係をインストールしてください。
+
+```
+pyenv install 3.10.6
+pyenv local 3.10.6
+
+
+pip install streamlit
+pip install plotly
 ```
 
 ## 使い方
