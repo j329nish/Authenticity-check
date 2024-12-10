@@ -57,17 +57,17 @@ git clone https://github.com/pyenv-win/pyenv-win.git "%USERPROFILE%\.pyenv"
 
 Windowsキーを押して「環境変数」と入力し、「システム環境変数の編集」を開く。
 <br>
-<img src="image/2.1.png" width="40%"><br>
+<img src="image/2.1.png" width="50%"><br>
 
 <br>
 「環境変数」を押す。
 <br>
-<img src="image/2.2.png" width="40%">
+<img src="image/2.2.png" width="50%">
 
 <br>
 システム環境変数のPathを押して「編集」を押す。
 <br>
-<img src="image/2.3.png" width="40%">
+<img src="image/2.3.png" width="50%">
 
 <br>
 新規で以下2つを追加する。
