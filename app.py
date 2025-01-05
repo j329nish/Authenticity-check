@@ -1,6 +1,6 @@
 import streamlit as st
 import plotly.graph_objects as go
-from value_shap_Roberta import process_text  # バックから関数をインポート
+from value import process_text  # バックから関数をインポート
 
 def highlight_text(text, ranges):
     highlighted = ""
@@ -32,40 +32,16 @@ def get_highlight_color(score):
         score *= -1
         return f'rgb({255 - min(score * 8 * 255,255)},{255 - min(score * 8 * 255,255)},{255})' #人間度を青く描写
     
-# 完全な円メーターを描画する関数
-def create_meter(percentage):
-    # 進捗部分の割合と残り部分の割合を設定
-    progress = percentage
-    remaining = 100 - percentage
-    
-    # 円メーターを作成
-    fig = go.Figure(data=[go.Pie(
-        values=[progress, remaining],
-        hole=0.5,  # ドーナツ型にするための穴の大きさ
-        marker=dict(colors=['skyblue', 'lightgray']),  # 進捗部分と残り部分の色
-        showlegend=False,  # 凡例を非表示にする
-        textinfo="none",
-        hoverinfo="percent"
-    )])
-
-    # グラフのレイアウト設定
-    fig.update_layout(
-        annotations=[dict(
-            text=f"確信度:{percentage}%",
-            x = 0.5,
-            y = 0.5,
-            font_size = 28,
-            font_color = "black",
-            showarrow = False
-        )
-        ],
-        margin=dict(t=0, b=0, l=0, r=0)  # 上下左右の余白を小さく設定
-    )
-    
-    return fig
 
 st.title("真贋判定アプリ")
 
+@st.dialog("使い方")
+def using():
+    st.write("ファイル読み込み欄にtxtファイルをアップロードするか直接文字を打ち込むことにより判定対象の文字列を入力することができ、対象の文字列が入力されている状態で判定ボタンを押下すると判定が開始されます。")
+    st.write("判定結果において、結果と確信度が表示され、その下に結果に影響を及ぼした部分がハイライト表示されて文章が表示されます。赤くなっている部分が影響が大きい部分、青くなっている部分が影響が小さい部分に対応します。")
+
+if st.button("使い方"):
+    using()
 uploaded_file = st.file_uploader("テキストファイルをアップロード", type='txt')
 if uploaded_file is not None:
     text = uploaded_file.read().decode("utf-8")
