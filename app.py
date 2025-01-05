@@ -1,6 +1,6 @@
 import streamlit as st
 import plotly.graph_objects as go
-from value import process_text  # バックから関数をインポート
+from value_shap_Roberta import process_text  # バックから関数をインポート
 
 def highlight_text(text, ranges):
     highlighted = ""
