@@ -15,12 +15,11 @@ class RoBERTaClassifier(pl.LightningModule):
 
 model_name = "ku-nlp/roberta-base-japanese-char-wwm" #事前学習済みモデルのロード
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-checkpoint_path = "epoch=9-step=520-v1.ckpt" #ファインチューニングモデル
-model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
-model_loaded = RoBERTaClassifier.load_from_checkpoint(checkpoint_path, model=model)
-model_loaded.eval()
+checkpoint_path = "RoBERTa.ckpt" #ファインチューニングモデル
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model_loaded.to(device)
+model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
+model_loaded = RoBERTaClassifier.load_from_checkpoint(checkpoint_path, model=model,map_location=device)
+model_loaded.eval()
 MAX_LENGTH = 512
 
 #予測関数予測ラベルと確信度を返す。
@@ -50,7 +49,7 @@ def calculate_shap_values(text):
     return shap_values
 
 #閾値を超えるトークンの計算
-def filter_valid_indices(shap_class_values, threshold=0.001):
+def filter_valid_indices(shap_class_values, threshold=0.02):
     valid_indices = [i for i, shap_value in enumerate(shap_class_values) if abs(shap_value) > threshold]
     return valid_indices
 
