@@ -1,6 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 from value_shap_Roberta import process_text  # バックから関数をインポート
+from check_text_lengs import check_text_lengs
 
 def highlight_text(text, ranges):
     highlighted = ""
@@ -50,21 +51,23 @@ else:
 
 if st.button("判定"):
     if text:
-        # テキストをvalues.pyに渡して処理し、複数の範囲とスコアを受け取る
-        pred_label, total_score, highlight_ranges = process_text(text)
-        # スコアを一度だけ表示（パーセント表示）
-        if pred_label!=1:
-            st.write("""<h1 align="center">結果：人間</h1>""",unsafe_allow_html=True)
-        else:
-            st.write("""<h1 align="center">結果：AI</h1>""",unsafe_allow_html=True)
-        score = round(100 * total_score,2)
-        st.write(f"""<h3 align="center">確信度:{score:.2f}%</h3>""",unsafe_allow_html=True)
-        st.progress(total_score)
+        if(check_text_lengs(text)):
+            # テキストをvalues.pyに渡して処理し、複数の範囲とスコアを受け取る
+            pred_label, total_score, highlight_ranges = process_text(text)
+            # スコアを一度だけ表示（パーセント表示）
+            if pred_label!=1:
+                st.write("""<h1 align="center">結果：人間</h1>""",unsafe_allow_html=True)
+            else:
+                st.write("""<h1 align="center">結果：AI</h1>""",unsafe_allow_html=True)
+            score = round(100 * total_score,2)
+            st.write(f"""<h3 align="center">確信度:{score:.2f}%</h3>""",unsafe_allow_html=True)
+            st.progress(total_score)
 
-        # 複数のハイライト処理を行う
-        highlighted_text = highlight_text(text, highlight_ranges)
-        st.markdown(f"<pre>{highlighted_text}</pre>", unsafe_allow_html=True)
-        
+            # 複数のハイライト処理を行う
+            highlighted_text = highlight_text(text, highlight_ranges)
+            st.markdown(f"<pre>{highlighted_text}</pre>", unsafe_allow_html=True)
+        else:
+            st.warning("テキストが長すぎます。")
         
         
     else:
