@@ -15,7 +15,7 @@ class RoBERTaClassifier(pl.LightningModule):
 
 model_name = "ku-nlp/roberta-base-japanese-char-wwm" #事前学習済みモデルのロード
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-checkpoint_path = "RoBERTa_Swallow.ckpt" #ファインチューニングモデル
+checkpoint_path = "roberta.ckpt" #ファインチューニングモデル
 model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model_loaded = RoBERTaClassifier.load_from_checkpoint(checkpoint_path, model=model, map_location=device)
