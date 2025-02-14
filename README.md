@@ -45,7 +45,8 @@ main/<br>
 ┣app.ipynb<br>
 ┣app.py<br>
 ┣check_text_lengs.py<br>
-└value_shap_roberta.py<br>
+┣value_shap_roberta.py<br>
+└train.py<br>
 ※roberta.ckptはありません。<br>
 
 ## 6.Webアプリのデモ
